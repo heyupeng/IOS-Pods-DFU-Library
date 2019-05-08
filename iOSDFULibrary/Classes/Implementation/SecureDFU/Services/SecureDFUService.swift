@@ -545,3 +545,21 @@ import CoreBluetooth
     
     // End
 }
+
+extension SecureDFUService {
+    // Add by Peng to jumpToBootloaderMode with encryption if need
+    func jumpToBootloaderMode(withEncryp encrypt: Bool, encrypData: [UInt8],  withAlternativeAdvertisingName rename: Bool, onError report: @escaping ErrorCallback) {
+        if !aborted {
+            func enterBootloader() {
+                if encrypt {
+                    self.buttonlessDfuCharacteristic!.send(ButtonlessDFURequest.enterBootloaderWith(data: encrypData), onSuccess: nil, onError: report)
+                    return;
+                }
+                self.buttonlessDfuCharacteristic!.send(ButtonlessDFURequest.enterBootloader, onSuccess: nil, onError: report)
+            }
+            enterBootloader()
+        } else {
+            sendReset(onError: report)
+        }
+    }
+}

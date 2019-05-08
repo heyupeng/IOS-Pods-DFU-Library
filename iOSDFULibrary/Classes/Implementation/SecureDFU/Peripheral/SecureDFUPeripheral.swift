@@ -222,3 +222,19 @@ internal class SecureDFUPeripheral : BaseCommonDFUPeripheral<SecureDFUExecutor, 
         )
     }
 }
+
+extension SecureDFUPeripheral {
+    // Add by Peng to set Bootloader encryption (X5/M1S/MiTu)
+    func jumpToBootloader(WithEncryp encryp: Bool, encrypData: [UInt8]) {
+        jumpingToBootloader = true
+        newAddressExpected = dfuService!.newAddressExpected
+        
+        dfuService!.jumpToBootloaderMode(withEncryp: encryp, encrypData: encrypData, withAlternativeAdvertisingName: alternativeAdvertisingNameEnabled,
+                                         // onSuccess the device gets disconnected and centralManager(_:didDisconnectPeripheral:error) will be called
+            onError: { (error, message) in
+                self.jumpingToBootloader = false
+                self.delegate?.error(error, didOccurWithMessage: message)
+        }
+        )
+    }
+}

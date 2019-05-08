@@ -210,6 +210,10 @@ import CoreBluetooth
      Disable the ability for the DFU process to resume from where it was.
     */
     @objc public var disableResume: Bool = false
+    
+    // Add by Peng to set jumpToBootloaderEncrypt
+    @objc public var jumpToBootloaderEncrypt: Bool = false
+    @objc public var jumpToBootloaderEncryptData: [UInt8] = []
 
     //MARK: - Public API
     

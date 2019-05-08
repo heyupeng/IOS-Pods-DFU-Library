@@ -82,6 +82,12 @@ internal class SecureDFUExecutor : DFUExecutor, SecureDFUPeripheralDelegate {
             delegate {
                 $0.dfuStateDidChange(to: .enablingDfuMode)
             }
+            
+            // Add by Peng to replace {peripheral.jumpToBootloader()}
+            if self.initiator.jumpToBootloaderEncrypt {
+                peripheral.jumpToBootloader(WithEncryp: self.initiator.jumpToBootloaderEncrypt, encrypData: self.initiator.jumpToBootloaderEncryptData)
+                return;
+            }
             peripheral.jumpToBootloader() // -> peripheralDidBecomeReady() will be called again, when connected to the Bootloader
         } else {
             // The device is ready to proceed with DFU

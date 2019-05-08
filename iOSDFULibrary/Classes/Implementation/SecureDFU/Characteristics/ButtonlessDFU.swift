@@ -67,11 +67,17 @@ internal enum ButtonlessDFUResultCode : UInt8 {
 }
 
 internal enum ButtonlessDFURequest {
+    // Add by Peng to enable enter bootloder with a data(X5 less than v1.0.2、M1S less than v1.0.2)
+    case enterBootloaderWith(data: [UInt8])
     case enterBootloader
     case set(name : String)
     
     var data : Data {
         switch self {
+        case .enterBootloaderWith(let bytes):
+            var data = Data(bytes: bytes)
+            data += ButtonlessDFUOpCode.enterBootloader.code
+            return data
         case .enterBootloader:
             return Data([ButtonlessDFUOpCode.enterBootloader.code])
         case .set(let name):
